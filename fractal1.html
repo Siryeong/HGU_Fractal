@@ -1,0 +1,84 @@
+<html>
+<body>
+<canvas id="canvas" width="800" height="1000"></canvas>
+
+<script type="text/javascript">
+var elem = document.getElementById('canvas');
+var context = elem.getContext('2d');
+
+context.fillStyle = '#000';
+context.lineWidth = 1;
+
+var deg_to_rad = Math.PI / 180.0;
+var depth = 6;
+
+function drawLine(x1, y1, x2, y2, brightness = 0){
+  context.moveTo(x1, y1);
+  context.lineTo(x2, y2);
+}
+
+function drawTriangle(x1, y1, angle, width, depth, decalcom = 1){
+  if(depth !== 0){
+    var x2 = x1 - (Math.cos((angle+180) * deg_to_rad) * width);
+    var y2 = y1 - (Math.sin((angle+180) * deg_to_rad) * width);
+    var x3 = x2 - (Math.cos((angle+(120*decalcom)) * deg_to_rad) * width);
+    var y3 = y2 - (Math.sin((angle+(120*decalcom)) * deg_to_rad) * width);
+    var x4 = x3 - (Math.cos((angle-(120*decalcom)) * deg_to_rad) * width);
+    var y4 = y3 - (Math.sin((angle-(120*decalcom)) * deg_to_rad) * width);
+    var x5 = x4 - (Math.cos((angle+180) * deg_to_rad) * width);
+    var y5 = y4 - (Math.sin((angle+180) * deg_to_rad) * width);
+
+    drawLine(x1, y1, x2, y2);
+    drawLine(x2, y2, x3, y3); //
+    drawLine(x3, y3, x4, y4); //
+    drawLine(x4, y4, x5, y5); //
+    //drawLine(x2, y2, x4, y4);
+
+    drawTriangle(x1, y1, angle, width/3.0, depth-1, decalcom);
+    drawTriangle(x2, y2, angle-(60*decalcom), width/3.0, depth-1, decalcom);
+    drawTriangle(x3, y3, angle+(60*decalcom), width/3.0, depth-1, decalcom);
+    drawTriangle(x4, y4, angle, width/3.0, depth-1, decalcom);
+  }
+}
+
+function drawTriangle2(x1, y1, angle, width, depth, decalcom = 1){
+  if(depth !== 0){
+    var x2 = x1 - (Math.cos((angle+180) * deg_to_rad) * width);
+    var y2 = y1 - (Math.sin((angle+180) * deg_to_rad) * width);
+    var x3 = x2 - (Math.cos((angle+(120*decalcom)) * deg_to_rad) * width);
+    var y3 = y2 - (Math.sin((angle+(120*decalcom)) * deg_to_rad) * width);
+    var x4 = x3 - (Math.cos((angle-(120*decalcom)) * deg_to_rad) * width);
+    var y4 = y3 - (Math.sin((angle-(120*decalcom)) * deg_to_rad) * width);
+    drawLine(x2, y2, x4, y4);
+
+    drawTriangle2(x1, y1, angle, width/3.0, depth-1, decalcom);
+    drawTriangle2(x2, y2, angle-(60*decalcom), width/3.0, depth-1, decalcom);
+    drawTriangle2(x3, y3, angle+(60*decalcom), width/3.0, depth-1, decalcom);
+    drawTriangle2(x4, y4, angle, width/3.0, depth-1, decalcom);
+  }
+}
+
+function decalcom(x1, y1, angle, width, depth){
+
+}
+
+context.strokeStyle = 'black';
+context.beginPath();
+drawTriangle(100, 300, 0, 200, depth);
+drawTriangle(700, 300, 120, 200, depth);
+drawTriangle(100, 300, 60, 200, depth, -1);
+context.closePath();
+context.stroke();
+
+context.strokeStyle = 'white';
+context.lineWidth = 2.5;
+context.beginPath();
+drawTriangle2(100, 300, 0, 200, depth);
+drawTriangle2(700, 300, 120, 200, depth);
+drawTriangle2(100, 300, 60, 200, depth, -1);
+context.closePath();
+context.stroke();
+</script>
+
+</body>
+</html>
