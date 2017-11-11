@@ -1,0 +1,50 @@
+<html>
+<body>
+<canvas id="canvas" width="800" height="1000"></canvas>
+
+<script type="text/javascript">
+var elem = document.getElementById('canvas');
+var context = elem.getContext('2d');
+
+context.fillStyle = '#000';
+context.lineWidth = 1;
+
+var deg_to_rad = Math.PI / 180.0;
+var depth =9;
+
+function drawLine(x1, y1, x2, y2, brightness){
+  context.moveTo(x1, y1);
+  context.lineTo(x2, y2);
+}
+
+function drawRect(x1, y1, angle, width, depth){
+  var angle2 = 30;
+  if(depth !== 0){
+    var x2 = x1 - (Math.cos(angle * deg_to_rad) * width);
+    var y2 = y1 - (Math.sin(angle * deg_to_rad) * width);
+    var x3 = x2 - (Math.cos((angle+90) * deg_to_rad) * width);
+    var y3 = y2 - (Math.sin((angle+90) * deg_to_rad) * width);
+    var x4 = x3 - (Math.cos((angle+180) * deg_to_rad) * width);
+    var y4 = y3 - (Math.sin((angle+180) * deg_to_rad) * width);
+    drawLine(x1, y1, x2, y2, depth); // bottom
+    drawLine(x2, y2, x3, y3, depth); // left
+    drawLine(x3, y3, x4, y4, depth); // top
+    drawLine(x4, y4, x1, y1, depth); // right
+
+    var width1 = (Math.cos(angle2 * deg_to_rad) * width);
+    var x_ = x4 - (Math.cos((angle+angle2) * deg_to_rad) * width1);
+    var y_ = y4 - (Math.sin((angle+angle2) * deg_to_rad) * width1);
+    var width2 = (Math.sin(angle2 * deg_to_rad) * width);
+    drawRect(x4, y4, angle+angle2, width1, depth-1);
+    drawRect(x_, y_, angle+angle2-90, width2, depth-1);
+  }
+}
+
+context.beginPath();
+drawRect(300, 600, 0, depth*10, depth);
+context.closePath();
+context.stroke();
+</script>
+
+</body>
+</html>

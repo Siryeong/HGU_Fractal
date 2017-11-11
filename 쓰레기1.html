@@ -1,0 +1,48 @@
+<html>
+<body>
+<canvas id="canvas" width="800" height="1000"></canvas>
+
+<script type="text/javascript">
+var elem = document.getElementById('canvas');
+var context = elem.getContext('2d');
+
+context.fillStyle = '#000';
+context.lineWidth = 1;
+
+var deg_to_rad = Math.PI / 180.0;
+var depth =9;
+
+function drawLine(x1, y1, x2, y2, brightness){
+  context.moveTo(x1, y1);
+  context.lineTo(x2, y2);
+}
+
+function drawTriangle(x1, y1, angle, width, depth){
+  if(depth !== 0){
+    var x2 = x1 - (Math.cos((angle+120) * deg_to_rad) * width);
+    var y2 = y1 - (Math.sin((angle+120) * deg_to_rad) * width);
+    var x3 = x2 - (Math.cos((angle+240) * deg_to_rad) * width);
+    var y3 = y2 - (Math.sin((angle+240) * deg_to_rad) * width);
+    drawLine(x1, y1, x2, y2, 10); // left
+    drawLine(x2, y2, x3, y3, 10); // right
+    drawLine(x3, y3, x1, y1, 00); // bottom
+
+    width /= 3.0;
+    var x1_ = x1 - (Math.cos((angle+120) * deg_to_rad) * width);
+    var y1_ = y1 - (Math.sin((angle+120) * deg_to_rad) * width);
+    var x2_ = x2 - (Math.cos((angle+240) * deg_to_rad) * width);
+    var y2_ = y2 - (Math.sin((angle+240) * deg_to_rad) * width);
+    drawTriangle(x1_, y1_, angle-60, width, depth -1);
+    drawTriangle(x2_, y2_, angle+60, width, depth -1);
+  }
+}
+
+context.beginPath();
+drawTriangle(300, 300, 0, 200, depth);
+//drawTriangle()
+context.closePath();
+context.stroke();
+</script>
+
+</body>
+</html>
