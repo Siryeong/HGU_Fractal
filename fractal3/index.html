@@ -1,75 +1,90 @@
 <html>
 
 <body>
+	<form align="center" method="post">
+		<input id="inpText" type="text" align="left" placeholder="depth">
+
+		<input type="button" onclick="getDepth()" value="Enter" />
+		<input type="reset" value="reset"/>
+	</form>
+	
+
+
 	<canvas id="sierpinskiCanvas" width="600" height="600"></canvas>
 	<script type="text/javascript">
-		 
-		var context = document.getElementById("sierpinskiCanvas").getContext("2d");
-		context.fillStyle = '#000000';
-		context.strokeStyle = 'black';
-		context.lineWidth = 1;
+	
+		function getDepth()
+		{
 
-		var width = 600;
-		var height = 600;
-		var size = 500;
+			var context = document.getElementById("sierpinskiCanvas").getContext("2d");
+			context.fillStyle = '#000000';
+			context.strokeStyle = 'black';
+			context.lineWidth = 1;
+
+			var width = 600;
+			var height = 600;
+			var size = 500;
+			
+			context.clearRect(0,0, width, height);					//clearscreen by drawing a white rectangle
+			input_d = document.getElementById("inpText").value;	
 		
-		//Recursive function that finds the mid points of each side of the triangle and connects them together. We assume 3 points, a, b, and c.
-		//note that d stands for depth, as the parameter and argument is different
-		function sierpinski(Ax,Ay,Bx,By,Cx,Cy,d,context) {
-		    if(d > 0) {
-		        var pointAx = (Bx + Cx) / 2;
-		        var pointAy = (By + Cy) / 2;
-		     
-		        var pointBx = (Ax + Cx) / 2;
-		        var pointBy = (Ay + Cy) / 2;
-		     
-		        var pointCx = (Ax + Bx) / 2;
-		        var pointCy = (Ay + By) / 2;
-		     
-		        var d2 = d-1;
-		        sierpinski(Ax,Ay,pointBx,pointBy,pointCx,pointCy,d2,context);
-		        sierpinski(pointCx,pointCy,pointAx,pointAy,Bx,By,d2,context);
-		        sierpinski(pointBx,pointBy,pointAx,pointAy,Cx,Cy,d2,context);
-		    }
-		    else {
-		        context.moveTo(Ax,Ay);
-		        context.lineTo(Bx,By);
-		        context.lineTo(Cx,Cy);
-		        context.lineTo(Ax,Ay);
-		    }
+			//Recursive function that finds the mid points of each side of the triangle and connects them together. We assume 3 points, a, b, and c.
+			//note that d stands for depth, as the parameter and argument is different
+			function sierpinski(Ax,Ay,Bx,By,Cx,Cy,d,context) {
+			    if(d > 0) {
+			        var pointAx = (Bx + Cx) / 2;
+			        var pointAy = (By + Cy) / 2;
+			     
+			        var pointBx = (Ax + Cx) / 2;
+			        var pointBy = (Ay + Cy) / 2;
+			     
+			        var pointCx = (Ax + Bx) / 2;
+			        var pointCy = (Ay + By) / 2;
+			     
+			        var d2 = d-1;
+			        sierpinski(Ax,Ay,pointBx,pointBy,pointCx,pointCy,d2,context);
+			        sierpinski(pointCx,pointCy,pointAx,pointAy,Bx,By,d2,context);
+			        sierpinski(pointBx,pointBy,pointAx,pointAy,Cx,Cy,d2,context);
+			    }
+			    else {
+			        context.moveTo(Ax,Ay);
+			        context.lineTo(Bx,By);
+			        context.lineTo(Cx,Cy);
+			        context.lineTo(Ax,Ay);
+			    }
+			}
+			     
+			//Calculates xy coordinates of the 3 points of the first triangle, and calls the sierpinski function
+			//with the calculated coordinates
+			function drawSierpinski(context, depth) {
+			    var midPointX = width/2;
+			    var midPointY = height/2;
+
+			    //midPoint x,y = (300,300), jwhile size is arbitrary
+			
+			     
+			    var ri = (size/6) * Math.sqrt(3);
+			    var ru = (size/3) * Math.sqrt(3);
+			     
+			    var pointAx = midPointX-(size/2);	//Left-Bottom point
+			    var pointAy = midPointY+ri;
+			     
+			    var pointBx = midPointX+(size/2);	//Right-Bottom point
+			    var pointBy = midPointY+ri;
+			     
+			    var pointCx = midPointX;			//Top Point
+			    var pointCy = midPointY-ru;
+			 
+			 	//initial call of the recursive function with xy coordinates of the first triangle
+			    sierpinski(pointAx,pointAy,pointBx,pointBy,pointCx,pointCy,depth,context);
+			}   
+			
+			context.beginPath();
+			drawSierpinski(context, input_d);
+			context.fill();
+			context.stroke();
+			context.closePath();
 		}
-		     
-		//Calculates xy coordinates of the 3 points of the first triangle, and calls the sierpinski function
-		//with the calculated coordinates
-		function drawSierpinski(context) {
-		    var midPointX = width/2;
-		    var midPointY = height/2;
-
-		    //midPoint x,y = (300,300), jwhile size is arbitrary
-		     
-		    var depth = 3;
-		     
-		    var ri = (size/6) * Math.sqrt(3);
-		    var ru = (size/3) * Math.sqrt(3);
-		     
-		    var pointAx = midPointX-(size/2);	//Left-Bottom point
-		    var pointAy = midPointY+ri;
-		     
-		    var pointBx = midPointX+(size/2);	//Right-Bottom point
-		    var pointBy = midPointY+ri;
-		     
-		    var pointCx = midPointX;			//Top Point
-		    var pointCy = midPointY-ru;
-		 
-		 	//initial call of the recursive function with xy coordinates of the first triangle
-		    sierpinski(pointAx,pointAy,pointBx,pointBy,pointCx,pointCy,depth,context);
-		}   
-		
-		context.beginPath();
-		drawSierpinski(context);
-		context.fill();
-		context.stroke();
-		context.closePath();
 	 
 	</script>
 </body>
